@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "831176169966",
+    "firebase_url": "https://uber2020-8cf96.firebaseio.com",
+    "project_id": "uber2020-8cf96",
+    "storage_bucket": "uber2020-8cf96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831176169966:android:193c2c4636b9453bc396ff",
+        "android_client_info": {
+          "package_name": "com.example.androiduberremake"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831176169966-ld46gkt251eg0frprl3ejtqs580rm2j7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjGa7DH2AH0TP78cSo1Z8_Qeep0JqY-SA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831176169966-ld46gkt251eg0frprl3ejtqs580rm2j7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

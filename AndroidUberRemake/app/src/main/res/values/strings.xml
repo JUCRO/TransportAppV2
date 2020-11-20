@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">TransportAppDriver</string>
+    <string name="register_text">Empecemos por crear tu cuenta</string>
+    <string name="first_name">Nombre</string>
+    <string name="last_name">Apellido</string>
+    <string name="phone_number">Numero celular</string>
+    <string name="continue_text">Continuar</string>
+    <string name="title_activity_driver_home">DriverHomeActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">v3.101.1</string>
+
+    <string name="menu_home_driver">Mapa</string>
+    <string name="menu_travels_driver">Historial de viajes</string>
+    <string name="menu_message_driver">Mensaje</string>
+    <string name="menu_sign_off_driver">Cerrar sesión</string>
+
+    <string name="menu_home">Mapa</string>
+    <string name="menu_sign_out">Cerrar sesión</string>
+
+    <string name="title_activity_maps">Map</string>
+    <string name="permission_require">Location permission require</string>
+    <string name="decline">Decline</string>
+    <string name="token_not_found">Token not found</string>
+    <string name="decline_failed">Decline failed</string>
+    <string name="decline_success">You have decline this request</string>
+    <string name="start_uber">Iniciar viaje</string>
+    <string name="rider_not_found">Cannot find rider with key</string>
+    <string name="accept_failed">Accept failed</string>
+    <string name="driver_arrived">El conductor a llegado.</string>
+    <string name="your_driver_arrived">Your driver arrived</string>
+    <string name="time_over">Time over</string>
+    <string name="complete_trip">Viaje completo</string>
+    <string name="complete_trip_failed">Complete Trip message send failed</string>
+    <string name="complete_trip_success">¡Gracias! Viaje completado.</string>
+</resources>

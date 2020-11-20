@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">TransportAppUser</string>
+    <string name="register_text">Comencemos creando su cuenta</string>
+    <string name="continue_text">Continue</string>
+    <string name="first_name">Nombre</string>
+    <string name="last_name">Apellido</string>
+    <string name="phone_number">Numero celular</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">v3.101.1</string>
+    <string name="menu_sign_out">Cerrar sesión</string>
+
+    <string name="menu_home">Mapa</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="menu_travels">Historia de viajes</string>
+    <string name="menu_message">Mensaje</string>
+    <string name="menu_address">Direcciones</string>
+    <string name="menu_paymentmethod">Métodos de pago</string>
+    <string name="menu_signoff">Cerrar sesión</string>
+    <string name="menu_Changerole">Cambio de rol</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="permission_require">Location permission required</string>
+    <string name="drivers_not_found">Drivers not found !</string>
+    <string name="not_found_key">Conductor no encontrado con llave</string>
+    <string name="welcome">¡Buenas tardes!</string>
+    <string name="choose_a_saved_place">Elige un lugar guardado</string>
+    <string name="where_to">¿A donde?</string>
+    <string name="city_name_empty">City name is empty</string>
+    <string name="title_activity_request_driver">Map</string>
+    <string name="pay_by_cash">Pagar en efectivo</string>
+    <string name="confirm_uber">Confirmar destino</string>
+    <string name="confirm_pickup_spot">Confirmar lugar de recogida</string>
+    <string name="address_demo">Centro Comercial Gran Estación</string>
+    <string name="meet_driver_here">Recogerme aquí</string>
+    <string name="confirm_pickup">Confirmar recogida</string>
+    <string name="finding_your_ride">Buscando conductor...</string>
+    <string name="token_not_found">Token not found</string>
+    <string name="request_driver_failed">No se pudo enviar la solicitud a la conductor</string>
+    <string name="no_driver_accept_request">No hay conductor que acepte su solicitud</string>
+    <string name="trip_not_found">Trip not found with key</string>
+    <string name="uber_x">BMW</string>
+    <string name="car_number_example">AYZ123</string>
+    <string name="driver_name_example">Jonathan Reyes</string>
+    <string name="ascci_dot">■</string>
+    <string name="language_example">Sabe ingles</string>
+</resources>
