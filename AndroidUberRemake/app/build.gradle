@@ -93,7 +93,9 @@ dependencies {
     //Loading button
     implementation "com.github.koushikcse:loading-button-android:1.0"
 
-    //M
+    //M -
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
+    //M - Notificationss
+    implementation 'com.android.volley:volley:1.1.1'
     
 }

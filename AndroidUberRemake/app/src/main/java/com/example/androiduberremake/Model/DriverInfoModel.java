@@ -1,7 +1,7 @@
 package com.example.androiduberremake.Model;
 
 public class DriverInfoModel {
-    private String firstName,lastName,phoneNumber, avatar;
+    private String firstName,lastName,phoneNumber, avatar, email;
     private double rating;
 
     public DriverInfoModel() {
@@ -46,4 +46,8 @@ public class DriverInfoModel {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
 }

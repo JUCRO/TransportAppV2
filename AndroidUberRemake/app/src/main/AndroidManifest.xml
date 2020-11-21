@@ -34,14 +34,17 @@
             android:name=".DriverHomeActivity"
             android:label="@string/title_activity_driver_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SplashScreenActivity"
-            android:background="@color/ColorFondo">
+
+        <activity android:name="LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".SplashScreenActivity"
+            android:background="@color/ColorFondo">
         </activity>
 
         <service android:name=".Services.MyFirebaseMessagingService">

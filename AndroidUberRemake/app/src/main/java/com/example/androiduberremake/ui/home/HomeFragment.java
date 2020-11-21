@@ -481,7 +481,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroy() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
-        geoFire.removeLocation(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        //Me da error la siguiente linea de codigo al cerrar sesión
+        //geoFire.removeLocation(FirebaseAuth.getInstance().getCurrentUser().getUid());
         onlineRef.removeEventListener(onlineValueEventListener);
 
         if (EventBus.getDefault().hasSubscriberForEvent(DriverRequestReceived.class))

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.androiduberremake.Model.DriverInfoModel;
 import com.example.androiduberremake.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -166,7 +167,7 @@ public class DriverHomeActivity extends AppCompatActivity {
                         .setNegativeButton("CANCELAR", (dialogInterface, i) -> dialogInterface.dismiss())
                         .setPositiveButton("CERRAR", (dialogInterface, i) -> {
                             FirebaseAuth.getInstance().signOut();
-                            Intent intent = new Intent(DriverHomeActivity.this,SplashScreenActivity.class);
+                            Intent intent = new Intent(DriverHomeActivity.this,LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
@@ -174,7 +175,6 @@ public class DriverHomeActivity extends AppCompatActivity {
                         .setCancelable(false);
                 AlertDialog dialog = builder.create();
                 dialog.setOnShowListener(dialogInterface -> {
-                    //Fix deprecated
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                             .setTextColor(ContextCompat.getColor(DriverHomeActivity.this,android.R.color.holo_red_dark));
                     dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
