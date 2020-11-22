@@ -59,6 +59,7 @@ public class Common {
     public static final String REQUEST_DRIVER_DECLINE_AND_REMOVE_TRIP = "DeclineAndRemoveTrip";
     public static final String RIDER_COMPLETE_TRIP = "DriverCompleteTrip";
     public static RiderModel currentRider;
+    public static final String MESSAGES_TRIP = "Messages";
 
 
     public static final String NOTI_TITLE = "title";

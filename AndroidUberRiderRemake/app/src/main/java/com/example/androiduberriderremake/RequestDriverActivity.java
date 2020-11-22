@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -124,13 +125,11 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
     CardView driver_info_layout;
     @BindView(R.id.txt_driver_name)
     TextView txt_driver_name;
-    @BindView(R.id.img_driver)
-    ImageView img_driver;
 
     @BindView(R.id.fill_maps)
     View fill_maps;
     private DriverGeoModel lastDriverCall;
-    private String driverOldPosition="";
+    private String driverOldPosition="", idTrip;
     private Handler handler;
     private float v;
     private double lat,lng;
@@ -477,12 +476,12 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                                             mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom-1));
 
                                             initDriverForMoving(event.getTripIp(),tripPlanModel);
-
-                                            //Load driver avatar
-                                            Glide.with(RequestDriverActivity.this)
-                                                    .load(tripPlanModel.getDriverInfoModel().getAvatar())
-                                                    .into(img_driver);
-                                            txt_driver_name.setText(tripPlanModel.getDriverInfoModel().getFirstName());
+                                            idTrip = event.getTripIp();
+                                            if (tripPlanModel.getDriverInfoModel() == null){
+                                                txt_driver_name.setText(tripPlanModel.getDriverInfoModel().getFirstName());
+                                            } else {
+                                                txt_driver_name.setText("Conductor");
+                                            }
 
                                             confirm_pickup_layout.setVisibility(View.GONE);
                                             confirm_uber_layout.setVisibility(View.GONE);
@@ -693,6 +692,16 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_driver);
+
+        ImageView messageTrip = (ImageView) findViewById(R.id.img_message_trip);
+        messageTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent messageTrip = new Intent(view.getContext() , Chat.class);
+                messageTrip.putExtra("idTrip", idTrip);
+                startActivity(messageTrip);
+            }
+        });
 
         init();
 
