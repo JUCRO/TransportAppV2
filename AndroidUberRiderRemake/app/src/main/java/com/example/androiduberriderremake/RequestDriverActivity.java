@@ -15,17 +15,21 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.bumptech.glide.Glide;
 import com.example.androiduberriderremake.Common.Common;
 import com.example.androiduberriderremake.Model.DriverGeoModel;
@@ -57,7 +61,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -70,7 +76,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -354,8 +362,30 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                 "Viaje completado",
                 "Tu viaje "+event.getTripkey()+" ha sido completo",
                 null);
-        finish();
-
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RequestDriverActivity.this, R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_bottom_sheet, (LinearLayout)findViewById(R.id.bottomSheetContainer));
+        bottomSheetView.findViewById(R.id.btnSendCalification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final RatingBar score = (RatingBar) bottomSheetView.findViewById(R.id.ratingDriver);
+                TextView comment = bottomSheetView.findViewById(R.id.commentDriver);
+                Map<String, Object> calification =  new HashMap<>();
+                calification.put("score", score.getRating());
+                calification.put("comment", comment.getText().toString());
+                FirebaseDatabase.getInstance()
+                .getReference(Common.TRIP)
+                .child(event.getTripkey())
+                .updateChildren(calification)
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getApplicationContext(), "Gracias por calificar el servicio", Toast.LENGTH_SHORT);
+                    finish();
+                });
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+        ButterKnife.bind(this);
     }
     @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void onDriverAcceptEvent(DriverAcceptTripEvent event)

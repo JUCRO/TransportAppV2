@@ -45,12 +45,12 @@ public class UserUtils {
     }
 
     public static void updateToken(Context context, String token) {
-        TokenModel tokenModel = new TokenModel(token);
-
+        Map<String, Object> driverInfo =  new HashMap<>();
+        driverInfo.put("token", token);
         FirebaseDatabase.getInstance()
-                .getReference(Common.DRIVER_INFO_REFERENCE)
+                .getReference(Common.RIDER_INFO_REFENCE)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .setValue(tokenModel)
+                .updateChildren(driverInfo)
                 .addOnFailureListener(e -> Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show()).addOnSuccessListener(aVoid -> {
 
         });
