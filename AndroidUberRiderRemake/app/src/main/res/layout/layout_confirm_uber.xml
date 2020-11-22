@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="67dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:orientation="horizontal"
@@ -24,19 +24,63 @@
             android:paddingBottom="8dp">
 
             <ImageView
-                android:layout_width="24dp"
+                android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_marginRight="32dp"
                 android:src="@drawable/ic_baseline_money_24"
                 app:tint="#737373" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="114dp"
+                android:layout_height="37dp"
                 android:layout_gravity="center_vertical"
                 android:text="@string/pay_by_cash"
                 android:textColor="#737373"
                 android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinnerPayMethod"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginLeft="4dp"
+                android:backgroundTint="#80FFFFFF"
+                android:ems="10"
+                android:entries="@array/PayMethods"
+                android:textColor="#80FFFFFF"
+                android:textColorHint="#80FFFFFF" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/activity_margin"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/activity_margin"
+            android:paddingBottom="8dp">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tripPrice"
+                android:layout_width="173dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="- -"
+                android:textAlignment="center"
+                android:textColor="#737373"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
         </LinearLayout>
 

@@ -84,16 +84,17 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()){
-                                        Map<String, Object> updateToken =  new HashMap<>();
-                                        updateToken.put("token", tokenUser);
-                                        databaseReference.child(userId).updateChildren(updateToken);
+                                        startActivity(new Intent(LoginActivity.this, DriverHomeActivity.class));
+                                    } else {
+                                        FirebaseAuth.getInstance().signOut();
+                                        Toast.makeText(LoginActivity.this, "No estas registrado como conductor", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Que esperas! Envia tu solicitud ya", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
                                 }
                             });
-                            startActivity(new Intent(LoginActivity.this, DriverHomeActivity.class));
                         } else {
                             Toast.makeText(LoginActivity.this, "El correo electronico o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                         }
@@ -111,9 +112,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // descomentar esto por error
-        /*if (mAuth.getCurrentUser() != null){
+        if (mAuth.getCurrentUser() != null){
             userId = mAuth.getCurrentUser().getUid();
-            redirectMenu();
-        }*/
+            startActivity(new Intent(LoginActivity.this, DriverHomeActivity.class));
+        }
     }
 }

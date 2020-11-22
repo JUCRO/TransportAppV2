@@ -17,9 +17,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,7 +134,6 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
     void onConfirmUber(){
         confirm_pickup_layout.setVisibility(View.VISIBLE); //Show pickup layout
         confirm_uber_layout.setVisibility(View.GONE); // Hidden Uber layout
-
         setDataPickup();
     }
 
@@ -808,6 +810,9 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
 
     private void addOriginMarker(String duration, String start_address) {
         View view = getLayoutInflater().inflate(R.layout.origin_info_windows,null);
+        TextView tripPrice = confirm_uber_layout.findViewById(R.id.tripPrice);
+        String durationNumber = duration.replace(" mins", "");
+        tripPrice.setText("$ " + (Integer.parseInt(durationNumber) * 500));
 
         TextView txt_time = (TextView)view.findViewById(R.id.txt_time);
          txt_origin = (TextView)view.findViewById(R.id.txt_origin);
