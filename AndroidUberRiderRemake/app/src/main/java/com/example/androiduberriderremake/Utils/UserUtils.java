@@ -1,6 +1,7 @@
 package com.example.androiduberriderremake.Utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -47,7 +48,7 @@ public class UserUtils {
         TokenModel tokenModel = new TokenModel(token);
 
         FirebaseDatabase.getInstance()
-                .getReference(Common.TOKEN_REFERENCE)
+                .getReference(Common.DRIVER_INFO_REFERENCE)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .setValue(tokenModel)
                 .addOnFailureListener(e -> Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show()).addOnSuccessListener(aVoid -> {
@@ -63,7 +64,7 @@ public class UserUtils {
         //Get token
         FirebaseDatabase
                 .getInstance()
-                .getReference(Common.TOKEN_REFERENCE)
+                .getReference(Common.DRIVER_INFO_REFERENCE)
                 .child(foundDriver.getKey())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

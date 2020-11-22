@@ -14,22 +14,22 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="104dp"
+        android:layout_width="114dp"
+        android:layout_height="134dp"
         android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/userimagen"
-        app:civ_border_color="@color/colorPrimary"
-        app:civ_border_width="1dp"
-        />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:src="@drawable/userimagen"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="1dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -40,11 +40,12 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/ColorPrimary2" />
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="258dp"
-        android:layout_height="64dp"
+        android:layout_width="194dp"
+        android:layout_height="117dp"
         android:layout_gravity="center"
         android:layout_marginLeft="5dp"
         android:orientation="vertical">
@@ -101,7 +102,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="36dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -119,6 +120,18 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/statusDriverSwitch"
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:text="Libre" />
         </LinearLayout>
 
     </LinearLayout>

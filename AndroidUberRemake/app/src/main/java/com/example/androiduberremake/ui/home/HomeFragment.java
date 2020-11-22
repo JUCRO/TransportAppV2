@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +37,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.androiduberremake.Common;
+import com.example.androiduberremake.DriverHomeActivity;
 import com.example.androiduberremake.Model.EventBus.DriverRequestReceived;
 import com.example.androiduberremake.Model.EventBus.NotifyToRiderEvent;
+import com.example.androiduberremake.Model.FCMSendData;
 import com.example.androiduberremake.Model.RiderModel;
+import com.example.androiduberremake.Model.TokenModel;
 import com.example.androiduberremake.Model.TripPlanModel;
 import com.example.androiduberremake.R;
 import com.example.androiduberremake.Remote.IGoogleAPI;
@@ -66,6 +71,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -148,8 +154,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     ProgressBar progress_notify;
 
 
-    private String tripNumberId = "";
-    private boolean isTripStart = false, onlineSystemAlreadyRegister = false;
+    private String tripNumberId = "", cityName = "";
+    private boolean isTripStart = false, onlineSystemAlreadyRegister = false, changeStatus;
 
     private GeoFire pickupGeoFire, destinationGeoFire;
     private GeoQuery pickupGeoQuery, destinationGeoQuery;
@@ -224,6 +230,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     };
 
     private CountDownTimer waiting_timer;
+    private NavigationView navigationView;
+    private Switch statusDriverSwirch;
 
     @OnClick(R.id.chip_decline)
     void OnDeclineClick() {
@@ -262,7 +270,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @OnClick(R.id.btn_start_uber)
-    void onStartUberClick() {
+    void onStartUberClick() { // cambiar a ocupado
         //Clear routes
         if (blackPolyline != null) blackPolyline.remove();
         if (greyPolyline != null) greyPolyline.remove();
@@ -284,6 +292,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         btn_start_uber.setVisibility(View.GONE);
         chip_decline.setVisibility(View.GONE);
         btn_complete_trip.setVisibility(View.VISIBLE);
+        Map<String, Object> driverInfo =  new HashMap<>();
+        driverInfo.put("status", "Ocupado");
+        FirebaseDatabase.getInstance()
+                .getReference(Common.DRIVER_INFO_REFERENCE)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .updateChildren(driverInfo).addOnSuccessListener(aVoid -> {
+        });
 
     }
 
@@ -338,9 +353,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                 pickupGeoFire = null;
 
                                 driverRequestReceived = null;
-                                makeDriverOnline(location);
-
-
+                                Map<String, Object> driverInfo =  new HashMap<>();
+                                driverInfo.put("status", "Libre");
+                                FirebaseDatabase.getInstance()
+                                .getReference(Common.DRIVER_INFO_REFERENCE)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .updateChildren(driverInfo).addOnSuccessListener(e -> {
+                                    makeDriverOnline(location);
+                                });
 
                             });
                 });
@@ -541,10 +561,53 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void init() {
-
+        changeStatus = true;
         iGoogleAPI = RetrofitClient.getInstance().create(IGoogleAPI.class);
-
-
+        navigationView = ((DriverHomeActivity)getActivity()).findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        statusDriverSwirch = (Switch) headerView.findViewById(R.id.statusDriverSwitch);
+        statusDriverSwirch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!changeStatus){
+                    if (statusDriverSwirch.isChecked()){
+                        Map<String, Object> driverInfo =  new HashMap<>();
+                        driverInfo.put("status", "Libre");
+                        FirebaseDatabase.getInstance()
+                                .getReference(Common.DRIVER_INFO_REFERENCE)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .updateChildren(driverInfo).addOnSuccessListener(aVoid -> {
+                            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                Snackbar.make(mapFragment.getView(), getString(R.string.permission_require), Snackbar.LENGTH_SHORT).show();
+                                return;
+                            }
+                            fusedLocationProviderClient.getLastLocation()
+                                    .addOnFailureListener(e -> {
+                                        Snackbar.make(mapFragment.getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                    }).addOnSuccessListener(location -> {
+                                chip_decline.setVisibility(View.GONE);
+                                layout_start_uber.setVisibility(View.GONE);
+                                mMap.clear();
+                                makeDriverOnline(location);
+                            });
+                        });
+                    } else {
+                        Map<String, Object> driverInfo =  new HashMap<>();
+                        driverInfo.put("status", "Inactivo");
+                        FirebaseDatabase.getInstance()
+                                .getReference(Common.DRIVER_INFO_REFERENCE)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .updateChildren(driverInfo).addOnSuccessListener(aVoid -> {
+                            FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCES).child(cityName).
+                            child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeValue();
+                        });
+                    }
+                } else {
+                    changeStatus = true;
+                }
+            }
+        });
         onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -632,30 +695,55 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void makeDriverOnline(Location location) {
+    public void makeDriverOnline(Location location) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         List<Address> addressList;
         try {
             addressList = geocoder.getFromLocation(location.getLatitude(),
                     location.getLongitude(), 1);
-            String cityName = addressList.get(0).getLocality();
+            cityName = addressList.get(0).getLocality();
 
-            driversLocationRef = FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCES)
-                    .child(cityName);
-            currentUserRef = driversLocationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            geoFire = new GeoFire(driversLocationRef);
+            FirebaseDatabase.getInstance().getReference(Common.DRIVER_INFO_REFERENCE).
+            child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+            addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists())
+                    {
+                        String status = dataSnapshot.child("status").getValue().toString();
+                        if ( status.equals("Libre")){
+                            if (changeStatus){
+                                statusDriverSwirch.setChecked(true);
+                                changeStatus = false;
+                            }
+                            driversLocationRef = FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCES)
+                                    .child(cityName);
+                            currentUserRef = driversLocationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            geoFire = new GeoFire(driversLocationRef);
 
-            //Update Location
-            geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                    new GeoLocation(location.getLatitude(),
-                            location.getLongitude()),
-                    (key, error) -> {
-                        if (error != null)
-                            Snackbar.make(mapFragment.getView(), error.getMessage(), Snackbar.LENGTH_LONG)
-                                    .show();
-                    });
+                            //Update Location
+                            geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                                    new GeoLocation(location.getLatitude(),
+                                            location.getLongitude()),
+                                    (key, error) -> {
+                                        if (error != null)
+                                            Snackbar.make(mapFragment.getView(), error.getMessage(), Snackbar.LENGTH_LONG)
+                                                    .show();
+                                    });
+                            registerOnlineSystem(); //Only register when we done setup
+                        } else {
+                            if (changeStatus){
+                                statusDriverSwirch.setChecked(false);
+                                changeStatus = false;
+                            }
+                        }
+                    }
+                }
 
-            registerOnlineSystem(); //Only register when we done setup
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
         } catch (IOException e) {
             Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
         }
@@ -860,6 +948,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                     .takeUntil(aLong -> aLong == 100) // 10 sec
                                     .doOnComplete(() -> {
                                         createTripPlan(event, duration, distance);
+                                        Map<String, Object> driverInfo =  new HashMap<>();
+                                        driverInfo.put("status", "Transicion");
+                                        FirebaseDatabase.getInstance()
+                                                .getReference(Common.DRIVER_INFO_REFERENCE)
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .updateChildren(driverInfo).addOnSuccessListener(e -> {
+                                        });
 
                                     }).subscribe();
 

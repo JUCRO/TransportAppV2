@@ -1,8 +1,10 @@
 package com.example.androiduberremake;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,11 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.androiduberremake.Model.DriverInfoModel;
 import com.example.androiduberremake.Utils.UserUtils;
+import com.example.androiduberremake.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +28,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -31,7 +41,9 @@ import com.google.firebase.storage.UploadTask;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -166,6 +178,26 @@ public class DriverHomeActivity extends AppCompatActivity {
                         .setMessage("¿De verdad quieres salir?")
                         .setNegativeButton("CANCELAR", (dialogInterface, i) -> dialogInterface.dismiss())
                         .setPositiveButton("CERRAR", (dialogInterface, i) -> {
+                            FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCES).
+                            orderByChild(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+                            addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()){
+                                        String cityName = snapshot.getValue().toString();
+                                        cityName = cityName.split("=")[0];
+                                        cityName = cityName.substring(1);
+                                        FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCES).child(cityName).
+                                        child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeValue().addOnCompleteListener(e -> {
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(DriverHomeActivity.this,LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

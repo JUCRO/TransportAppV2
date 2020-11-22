@@ -28,6 +28,7 @@ import com.google.firebase.messaging.CommonNotificationBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,12 +47,12 @@ public class UserUtils {
     }
 
     public static void updateToken(Context context, String token) {
-        TokenModel tokenModel = new TokenModel(token);
-
+        Map<String, Object> driverInfo =  new HashMap<>();
+        driverInfo.put("token", token);
         FirebaseDatabase.getInstance()
-                .getReference(Common.TOKEN_REFERENCE)
+                .getReference(Common.DRIVER_INFO_REFERENCE)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .setValue(tokenModel)
+                .updateChildren(driverInfo)
                 .addOnFailureListener(e -> Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show()).addOnSuccessListener(aVoid -> {
 
                 });
@@ -64,7 +65,7 @@ public class UserUtils {
 
         FirebaseDatabase
                 .getInstance()
-                .getReference(Common.TOKEN_REFERENCE)
+                .getReference(Common.DRIVER_INFO_REFERENCE)
                 .child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -121,7 +122,7 @@ public class UserUtils {
 
         FirebaseDatabase
                 .getInstance()
-                .getReference(Common.TOKEN_REFERENCE)
+                .getReference(Common.DRIVER_INFO_REFERENCE)
                 .child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -176,7 +177,7 @@ public class UserUtils {
 
         FirebaseDatabase
                 .getInstance()
-                .getReference(Common.TOKEN_REFERENCE)
+                .getReference(Common.DRIVER_INFO_REFERENCE)
                 .child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -244,7 +245,7 @@ public class UserUtils {
                     //Delete success, send notification to Rider app
                     FirebaseDatabase
                             .getInstance()
-                            .getReference(Common.TOKEN_REFERENCE)
+                            .getReference(Common.DRIVER_INFO_REFERENCE)
                             .child(key)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -305,7 +306,7 @@ public class UserUtils {
                     //Update success, send notification to Rider app
                     FirebaseDatabase
                             .getInstance()
-                            .getReference(Common.TOKEN_REFERENCE)
+                            .getReference(Common.DRIVER_INFO_REFERENCE)
                             .child(key)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

@@ -24,7 +24,7 @@ public class Common {
 
     public static final String DRIVER_INFO_REFERENCE = "DriverInfo";
     public static final String DRIVERS_LOCATION_REFERENCES = "DriversLocation";
-    public static final String TOKEN_REFERENCE = "Token";
+    //public static final String TOKEN_REFERENCE = "Token";
     public static final String NOTI_TITLE = "title";
     public static final String NOTI_CONTENT = "body";
     public static final String RIDER_PICKUP_LOCATION = "PickupLocation";
