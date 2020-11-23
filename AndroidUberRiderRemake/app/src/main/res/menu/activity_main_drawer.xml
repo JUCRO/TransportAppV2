@@ -13,13 +13,6 @@
             android:icon="@android:drawable/ic_menu_recent_history"
             android:title="@string/menu_travels" />
         <item
-            android:id="@+id/nav_message"
-            android:icon="@drawable/ic_baseline_email_24"
-            android:title="@string/menu_message" />
-        <item
-            android:icon="?android:attr/actionModeFindDrawable"
-            android:title="@string/menu_paymentmethod" />
-        <item
             android:id="@+id/btnRegisterDriver"
             android:icon="@android:drawable/ic_dialog_info"
             android:title="Quiero ser conductor" />

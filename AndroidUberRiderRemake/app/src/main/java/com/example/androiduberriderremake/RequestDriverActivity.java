@@ -733,7 +733,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
 
         try{
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,
-                    R.raw.uber_maps_style));
+                    R.raw.transport_maps_style));
             if(!success)
                 Toast.makeText(this, "Load map style failed", Toast.LENGTH_SHORT).show();
         }catch (Exception e) {

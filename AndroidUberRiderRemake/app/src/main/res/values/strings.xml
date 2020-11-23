@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">TransportAppUser</string>
-    <string name="register_text">Comencemos creando su cuenta</string>
+    <string name="register_text">Comencemos creando su cuenta "Viajero"</string>
     <string name="continue_text">Continue</string>
     <string name="first_name">Nombre</string>
     <string name="last_name">Apellido</string>
@@ -17,6 +17,11 @@
     <string name="menu_home">Mapa</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+
+    <string name="menu_home_admin">Solicitudes</string>
+    <string name="menu_register_driver_admin">Registrar conductor</string>
+    <string name="menu_saleadmin">Promociones</string>
+    <string name="menu_signoff_admin">Cerrar sesión</string>
 
     <string name="menu_travels">Historia de viajes</string>
     <string name="menu_message">Mensaje</string>
@@ -52,5 +57,30 @@
     <string-array name="PayMethods">
         <item>Efectivo</item>
         <item>Tarjeta de credito</item>
+    </string-array>
+
+    <string-array name="banks">
+        <item>--</item>
+        <item>Bancolommbia</item>
+        <item>Daviplata</item>
+        <item>Colpatria</item>
+        <item>Davivienda</item>
+    </string-array>
+    <string-array name="models">
+        <item>--</item>
+        <item>2020</item>
+        <item>2019</item>
+        <item>2018</item>
+        <item>2017</item>
+        <item>2016</item>
+        <item>2015</item>
+        <item>2016</item>
+        <item>2014</item>
+    </string-array>
+    <string-array name="statusDriver">
+        <item>Libre</item>
+        <item>En transición</item>
+        <item>Ocupado</item>
+        <item>Inactivo</item>
     </string-array>
 </resources>

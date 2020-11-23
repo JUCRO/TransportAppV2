@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#333333"
+    android:orientation="vertical"
+    tools:context="RegisterUserActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="0"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:background="@drawable/my_border"
+            android:backgroundTint="@color/ColorFondo"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/iback"
+                android:backgroundTint="@color/ColorPrimary2" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="226dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            app:srcCompat="@drawable/logo" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="22dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="81dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="411dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muli_extralight"
+            android:text="Crea tu cuenta"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="normal|bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="71dp">
+
+        <Space
+            android:layout_width="91dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="277dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#80FFFFFF"
+            android:ems="10"
+            android:fontFamily="@font/muli_extralight"
+            android:hint="Ingresa el email"
+            android:inputType="textEmailAddress"
+            android:singleLine="false"
+            android:textColor="#80FFFFFF"
+            android:textColorHint="#80FFFFFF" />
+
+        <Space
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="278dp"
+        android:layout_weight="1">
+
+        <Space
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/password"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="277dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#80FFFFFF"
+            android:ems="10"
+            android:fontFamily="@font/muli_extralight"
+            android:hint="Ingresa la contraseña"
+            android:inputType="textPassword"
+            android:textColor="#80FFFFFF"
+            android:textColorHint="#80FFFFFF" />
+
+        <Space
+            android:layout_width="59dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="206dp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/my_border"
+            android:fontFamily="@font/muli_extralight"
+            android:text="Registrarse"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

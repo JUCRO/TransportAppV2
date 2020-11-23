@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.androiduberriderremake.Common.Common;
@@ -21,9 +23,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -50,8 +59,10 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private NavController navController;
-    private ImageView img_avatar;
+    private ImageView img_avatar, perfil;
     private Uri imageUri;
+    private FirebaseAuth mAuth;
+    private DatabaseReference databaseReferenceUser, databaseReferenceRequest;
 
     private AlertDialog waitingDialog;
     private StorageReference storageReference;
@@ -62,7 +73,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        mAuth = FirebaseAuth.getInstance();
+        databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Riders").child(mAuth.getCurrentUser().getUid());
+        databaseReferenceRequest = FirebaseDatabase.getInstance().getReference().child("DriverRequest");
 
 
 
@@ -77,7 +90,15 @@ public class HomeActivity extends AppCompatActivity {
          navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
+        View headView = navigationView.getHeaderView(0);
+        perfil = headView.findViewById(R.id.dataupdate);
+        perfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, DataUpdate.class);
+                startActivity(intent);
+            }
+        });
         init();
     }
 
@@ -99,7 +120,7 @@ public class HomeActivity extends AppCompatActivity {
                         .setNegativeButton("CANCELAR", (dialogInterface, i) -> dialogInterface.dismiss())
                         .setPositiveButton("CERRAR", (dialogInterface, i) -> {
                             FirebaseAuth.getInstance().signOut();
-                            Intent intent = new Intent(HomeActivity.this,SplashScreenActivity.class);
+                            Intent intent = new Intent(HomeActivity.this,LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
@@ -115,7 +136,56 @@ public class HomeActivity extends AppCompatActivity {
 
                 dialog.show();
             }
-            return true;
+
+            if (item.getItemId() == R.id.btnRegisterDriver){
+                Query q = databaseReferenceUser;
+                q.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists() && snapshot.child("DriverInformation").exists()){
+                            Query q2 = databaseReferenceRequest.orderByChild("driverId").equalTo(mAuth.getCurrentUser().getUid());
+                            q2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                                    if (snapshot2.exists()){
+                                        for (DataSnapshot dataSnapshot: snapshot2.getChildren()){
+                                            String status = dataSnapshot.child("status").getValue().toString();
+                                            if (status.equals("Aceptado")){
+                                                    Toast.makeText(HomeActivity.this, "Ya eres un conductor activo", Toast.LENGTH_SHORT).show();// cambio de rol y redirect menudriver
+                                            } else if (status.equals("Pendiente")){
+                                                Toast.makeText(HomeActivity.this, "Ya tienes una solicitud pendiente", Toast.LENGTH_SHORT).show();
+                                            } else if (status.equals("Rechazado")){
+                                                Toast.makeText(HomeActivity.this, "Tu solicitud fue rechazada, debes esperar 3 meses para volver a enviarla", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        } else if (snapshot.exists() && snapshot.child("UserInformation").exists()){
+                            if (snapshot.child("UserInformation").child("birthdate").getValue().toString().isEmpty() ||
+                                    snapshot.child("UserInformation").child("identification").getValue().toString().isEmpty() ||
+                                    snapshot.child("UserInformation").child("lastName").getValue().toString().isEmpty() ||
+                                    snapshot.child("UserInformation").child("firstName").getValue().toString().isEmpty() ||
+                                    snapshot.child("UserInformation").child("phoneNumber").getValue().toString().isEmpty()){
+                                Toast.makeText(HomeActivity.this, "Falta información por diligenciar de tu perfil", Toast.LENGTH_SHORT).show();
+                            } else{
+                                startActivity(new Intent(HomeActivity.this, RegisterDriverActivity.class));
+                            }
+                        } else{
+                            Toast.makeText(HomeActivity.this, "No has registrado la infromación del usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+            return false;
         });
 
         //Set data for user
@@ -230,6 +300,4 @@ public class HomeActivity extends AppCompatActivity {
         super.onStop();
 
     }
-
-
 }

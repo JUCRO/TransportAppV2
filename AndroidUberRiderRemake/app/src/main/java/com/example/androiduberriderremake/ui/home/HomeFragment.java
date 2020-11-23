@@ -8,7 +8,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,15 +18,12 @@ import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.androiduberriderremake.Callback.IFirebaseDriverInfoListener;
 import com.example.androiduberriderremake.Callback.IFirebaseFailedListener;
@@ -36,7 +32,6 @@ import com.example.androiduberriderremake.Model.AnimationModel;
 import com.example.androiduberriderremake.Model.DriverGeoModel;
 import com.example.androiduberriderremake.Model.DriverInfoModel;
 import com.example.androiduberriderremake.Model.EventBus.SelectePlaceEvent;
-import com.example.androiduberriderremake.Model.EventBus.ShowNotificationFinishTrip;
 import com.example.androiduberriderremake.Model.GeoQueryModel;
 import com.example.androiduberriderremake.R;
 import com.example.androiduberriderremake.Remote.IGoogleAPI;
@@ -62,15 +57,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -86,8 +78,6 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -95,7 +85,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -155,7 +144,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
 
     @Override
     public void onDestroy() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
+        //Me da error la siguiente linea de codigo al cerrar sesión
+        //fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
         super.onDestroy();
     }
 
@@ -549,7 +539,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
         mMap.getUiSettings().setZoomControlsEnabled(true);
         try{
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(),
-                    R.raw.uber_maps_style));
+                    R.raw.transport_maps_style));
             if(!success)
                 Snackbar.make(getView(),"Load map style failed", Snackbar.LENGTH_SHORT).show();
         }catch (Exception e)
