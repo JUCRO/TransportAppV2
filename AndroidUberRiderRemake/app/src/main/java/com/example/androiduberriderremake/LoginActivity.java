@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androiduberriderremake.Common.Common;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -130,10 +131,25 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // descomentar esto por error
-        /*if (mAuth.getCurrentUser() != null){
+        if (mAuth.getCurrentUser() != null){
             userId = mAuth.getCurrentUser().getUid();
-            redirectMenu();
-        }*/
+            FirebaseDatabase.getInstance().getReference(Common.RIDER_INFO_REFENCE).child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()){
+                        if(dataSnapshot.hasChild("isAdmin")){
+                            startActivity(new Intent(LoginActivity.this, MenuAdminActivity.class));
+                        } else {
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }

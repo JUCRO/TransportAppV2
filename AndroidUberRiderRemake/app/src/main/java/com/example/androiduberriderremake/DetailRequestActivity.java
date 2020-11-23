@@ -166,7 +166,7 @@ public class DetailRequestActivity extends AppCompatActivity {
                                 placa.setText(snapshot.child("DriverInformation").child("licensePlate").getValue().toString());
                                 color.setText(snapshot.child("DriverInformation").child("carColour").getValue().toString());
                                 modelo.setText(snapshot.child("DriverInformation").child("carModel").getValue().toString());
-                                nombreConductor.setText(snapshot.child("UserInformation").child("name").getValue().toString() + " " + snapshot.child("UserInformation").child("lastName").getValue().toString());
+                                nombreConductor.setText(snapshot.child("UserInformation").child("firstName").getValue().toString() + " " + snapshot.child("UserInformation").child("lastName").getValue().toString());
                                 downloadImages(driverID);
                             }
                         }
