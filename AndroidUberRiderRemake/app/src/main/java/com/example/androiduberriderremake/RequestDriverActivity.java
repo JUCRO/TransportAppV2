@@ -2,12 +2,9 @@ package com.example.androiduberriderremake;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
 import android.animation.ValueAnimator;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -17,12 +14,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +28,6 @@ import com.example.androiduberriderremake.Model.EventBus.DeclineRequestFromDrive
 import com.example.androiduberriderremake.Model.EventBus.DriverAcceptTripEvent;
 import com.example.androiduberriderremake.Model.EventBus.DriverCompleteTripEvent;
 import com.example.androiduberriderremake.Model.EventBus.SelectePlaceEvent;
-import com.example.androiduberriderremake.Model.EventBus.ShowNotificationFinishTrip;
 import com.example.androiduberriderremake.Model.TripPlanModel;
 import com.example.androiduberriderremake.Remote.IGoogleAPI;
 import com.example.androiduberriderremake.Remote.RetrofitClient;
@@ -43,7 +36,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.internal.IMapFragmentDelegate;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -79,7 +71,6 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.internal.connection.RouteSelector;
 
 public class RequestDriverActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -694,7 +685,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
 
         try{
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,
-                    R.raw.uber_maps_style));
+                    R.raw.transport_maps_style));
             if(!success)
                 Toast.makeText(this, "Load map style failed", Toast.LENGTH_SHORT).show();
         }catch (Exception e) {

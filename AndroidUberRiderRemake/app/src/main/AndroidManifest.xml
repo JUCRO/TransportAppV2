@@ -36,14 +36,28 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
-            android:name=".SplashScreenActivity"
-            android:background="@color/ColorFondo">
+            android:name="RegisterUserActivity"
+            android:parentActivityName="LoginActivity" />
+        <activity android:name="AddPromotion"
+            android:parentActivityName="MenuAdminActivity" />
+
+        <activity android:name="RegisterDriverActivity"/>
+        <activity android:name=".DetailRequestActivity" />
+        <activity android:name="DataUpdate" />
+        <activity android:name="MenuAdminActivity" />
+        <activity android:name="LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SplashScreenActivity"
+            android:background="@color/ColorFondo">
         </activity>
 
         <service android:name=".Services.MyFirebaseMessagingService">
