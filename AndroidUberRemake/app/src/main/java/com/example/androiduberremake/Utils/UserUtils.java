@@ -122,7 +122,7 @@ public class UserUtils {
 
         FirebaseDatabase
                 .getInstance()
-                .getReference(Common.DRIVER_INFO_REFERENCE)
+                .getReference(Common.RIDER_INFO)
                 .child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -306,7 +306,7 @@ public class UserUtils {
                     //Update success, send notification to Rider app
                     FirebaseDatabase
                             .getInstance()
-                            .getReference(Common.DRIVER_INFO_REFERENCE)
+                            .getReference(Common.RIDER_INFO)
                             .child(key)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

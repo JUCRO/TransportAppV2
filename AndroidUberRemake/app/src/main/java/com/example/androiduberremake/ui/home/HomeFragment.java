@@ -2,6 +2,7 @@ package com.example.androiduberremake.ui.home;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Looper;
@@ -36,6 +38,7 @@ import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.androiduberremake.Chat;
 import com.example.androiduberremake.Common;
 import com.example.androiduberremake.DriverHomeActivity;
 import com.example.androiduberremake.Model.EventBus.DriverRequestReceived;
@@ -139,8 +142,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     TextView txt_start_uber_estimate_distance;
     @BindView(R.id.txt_start_uber_estimate_time)
     TextView txt_start_uber_estimate_time;
-    @BindView(R.id.img_phone_call)
-    ImageView img_phone_call;
+    @BindView(R.id.img_message_trip)
+    ImageView img_message_trip;
     @BindView(R.id.btn_start_uber)
     LoadingButton btn_start_uber;
     @BindView(R.id.btn_complete_trip)
@@ -159,6 +162,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private GeoFire pickupGeoFire, destinationGeoFire;
     private GeoQuery pickupGeoQuery, destinationGeoQuery;
+
+    private ImageView messageTrip;
 
     private GeoQueryEventListener pickupGeoQueryListener = new GeoQueryEventListener() {
         @Override
@@ -545,6 +550,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        messageTrip = (ImageView) root.findViewById(R.id.img_message_trip);
+        messageTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent messageTrip = new Intent(root.getContext(), Chat.class);
+                messageTrip.putExtra("idTrip", tripNumberId);
+                startActivity(messageTrip);
+            }
+        });
 
         initViews(root);
         init();

@@ -44,6 +44,7 @@ public class Common {
     public static final String TRIP_DESTINATION_LOCATION_REF = "TripDestinationLocation";
     public static final String REQUEST_DRIVER_DECLINE_AND_REMOVE_TRIP = "DeclineAndRemoveTrip" ;
     public static final String RIDER_COMPLETE_TRIP = "DriverCompleteTrip";
+    public static final String MESSAGES_TRIP = "Messages";
 
     public static DriverInfoModel currentUser;
     public static String Trip="Trips";

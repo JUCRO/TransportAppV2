@@ -2,9 +2,13 @@ package com.example.androiduberriderremake;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,14 +16,21 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.bumptech.glide.Glide;
 import com.example.androiduberriderremake.Common.Common;
 import com.example.androiduberriderremake.Model.DriverGeoModel;
@@ -28,6 +39,7 @@ import com.example.androiduberriderremake.Model.EventBus.DeclineRequestFromDrive
 import com.example.androiduberriderremake.Model.EventBus.DriverAcceptTripEvent;
 import com.example.androiduberriderremake.Model.EventBus.DriverCompleteTripEvent;
 import com.example.androiduberriderremake.Model.EventBus.SelectePlaceEvent;
+import com.example.androiduberriderremake.Model.EventBus.ShowNotificationFinishTrip;
 import com.example.androiduberriderremake.Model.TripPlanModel;
 import com.example.androiduberriderremake.Remote.IGoogleAPI;
 import com.example.androiduberriderremake.Remote.RetrofitClient;
@@ -36,6 +48,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.internal.IMapFragmentDelegate;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -49,7 +62,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -62,7 +77,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -71,6 +88,7 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.internal.connection.RouteSelector;
 
 public class RequestDriverActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -107,13 +125,11 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
     CardView driver_info_layout;
     @BindView(R.id.txt_driver_name)
     TextView txt_driver_name;
-    @BindView(R.id.img_driver)
-    ImageView img_driver;
 
     @BindView(R.id.fill_maps)
     View fill_maps;
     private DriverGeoModel lastDriverCall;
-    private String driverOldPosition="";
+    private String driverOldPosition="", idTrip;
     private Handler handler;
     private float v;
     private double lat,lng;
@@ -345,8 +361,30 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                 "Viaje completado",
                 "Tu viaje "+event.getTripkey()+" ha sido completo",
                 null);
-        finish();
-
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RequestDriverActivity.this, R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_bottom_sheet, (LinearLayout)findViewById(R.id.bottomSheetContainer));
+        bottomSheetView.findViewById(R.id.btnSendCalification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final RatingBar score = (RatingBar) bottomSheetView.findViewById(R.id.ratingDriver);
+                TextView comment = bottomSheetView.findViewById(R.id.commentDriver);
+                Map<String, Object> calification =  new HashMap<>();
+                calification.put("score", score.getRating());
+                calification.put("comment", comment.getText().toString());
+                FirebaseDatabase.getInstance()
+                .getReference(Common.TRIP)
+                .child(event.getTripkey())
+                .updateChildren(calification)
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getApplicationContext(), "Gracias por calificar el servicio", Toast.LENGTH_SHORT);
+                    finish();
+                });
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+        ButterKnife.bind(this);
     }
     @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void onDriverAcceptEvent(DriverAcceptTripEvent event)
@@ -438,12 +476,12 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                                             mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom-1));
 
                                             initDriverForMoving(event.getTripIp(),tripPlanModel);
-
-                                            //Load driver avatar
-                                            Glide.with(RequestDriverActivity.this)
-                                                    .load(tripPlanModel.getDriverInfoModel().getAvatar())
-                                                    .into(img_driver);
-                                            txt_driver_name.setText(tripPlanModel.getDriverInfoModel().getFirstName());
+                                            idTrip = event.getTripIp();
+                                            if (tripPlanModel.getDriverInfoModel() == null){
+                                                txt_driver_name.setText(tripPlanModel.getDriverInfoModel().getFirstName());
+                                            } else {
+                                                txt_driver_name.setText("Conductor");
+                                            }
 
                                             confirm_pickup_layout.setVisibility(View.GONE);
                                             confirm_uber_layout.setVisibility(View.GONE);
@@ -654,6 +692,16 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_driver);
+
+        ImageView messageTrip = (ImageView) findViewById(R.id.img_message_trip);
+        messageTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent messageTrip = new Intent(view.getContext() , Chat.class);
+                messageTrip.putExtra("idTrip", idTrip);
+                startActivity(messageTrip);
+            }
+        });
 
         init();
 
