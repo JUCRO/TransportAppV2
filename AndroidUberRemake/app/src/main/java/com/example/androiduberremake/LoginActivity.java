@@ -3,6 +3,7 @@ package com.example.androiduberremake;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androiduberremake.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -21,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
@@ -84,6 +87,14 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()){
+                                        //Update token
+                                        FirebaseInstanceId.getInstance()
+                                                .getInstanceId()
+                                                .addOnFailureListener(e -> Toast.makeText(LoginActivity.this,e.getMessage(), Toast.LENGTH_SHORT).show())
+                                                .addOnSuccessListener(instanceIdResult -> {
+                                                    Log.d("TOKEN",instanceIdResult.getToken());
+                                                    UserUtils.updateToken(LoginActivity.this,instanceIdResult.getToken());
+                                                });
                                         startActivity(new Intent(LoginActivity.this, DriverHomeActivity.class));
                                     } else {
                                         FirebaseAuth.getInstance().signOut();

@@ -477,7 +477,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
 
                                             initDriverForMoving(event.getTripIp(),tripPlanModel);
                                             idTrip = event.getTripIp();
-                                            if (tripPlanModel.getDriverInfoModel() == null){
+                                            if (tripPlanModel.getDriverInfoModel() != null){
                                                 txt_driver_name.setText(tripPlanModel.getDriverInfoModel().getFirstName());
                                             } else {
                                                 txt_driver_name.setText("Conductor");
