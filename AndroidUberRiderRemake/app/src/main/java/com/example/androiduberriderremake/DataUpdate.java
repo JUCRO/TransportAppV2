@@ -8,13 +8,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androiduberriderremake.Common.Common;
 import com.example.androiduberriderremake.models.User;
 import com.example.androiduberriderremake.models.UserInformation;
 import com.example.androiduberriderremake.providers.UserProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import dmax.dialog.SpotsDialog;
 
@@ -45,6 +50,35 @@ public class DataUpdate extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DataUpdate.this,HomeActivity.class));
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference(Common.RIDER_INFO_REFENCE)
+        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    if (dataSnapshot.hasChild("birthdate")){
+                        txtFechaNacimiento.setText(dataSnapshot.child("birthdate").getValue().toString());
+                    }
+                    if (dataSnapshot.hasChild("firstName")){
+                        txtNombre.setText(dataSnapshot.child("firstName").getValue().toString());
+                    }
+                    if (dataSnapshot.hasChild("lastName")){
+                        txtApellido.setText(dataSnapshot.child("lastName").getValue().toString());
+                    }
+                    if (dataSnapshot.hasChild("phoneNumber")){
+                        txtTelefono.setText(dataSnapshot.child("phoneNumber").getValue().toString());
+                    }
+                    if (dataSnapshot.hasChild("identification")){
+                        txtIdentifiacion.setText(dataSnapshot.child("identification").getValue().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 

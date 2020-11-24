@@ -166,12 +166,12 @@ public class HomeActivity extends AppCompatActivity {
 
                                 }
                             });
-                        } else if (snapshot.exists() && snapshot.child("UserInformation").exists()){
-                            if (snapshot.child("UserInformation").child("birthdate").getValue().toString().isEmpty() ||
-                                    snapshot.child("UserInformation").child("identification").getValue().toString().isEmpty() ||
-                                    snapshot.child("UserInformation").child("lastName").getValue().toString().isEmpty() ||
-                                    snapshot.child("UserInformation").child("firstName").getValue().toString().isEmpty() ||
-                                    snapshot.child("UserInformation").child("phoneNumber").getValue().toString().isEmpty()){
+                        } else if (snapshot.exists()){
+                            if (snapshot.child("birthdate").getValue().toString().isEmpty() ||
+                                    snapshot.child("identification").getValue().toString().isEmpty() ||
+                                    snapshot.child("lastName").getValue().toString().isEmpty() ||
+                                    snapshot.child("firstName").getValue().toString().isEmpty() ||
+                                    snapshot.child("phoneNumber").getValue().toString().isEmpty()){
                                 Toast.makeText(HomeActivity.this, "Falta información por diligenciar de tu perfil", Toast.LENGTH_SHORT).show();
                             } else{
                                 startActivity(new Intent(HomeActivity.this, RegisterDriverActivity.class));

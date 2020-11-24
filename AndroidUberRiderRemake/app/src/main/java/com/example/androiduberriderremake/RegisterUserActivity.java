@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androiduberriderremake.Utils.UserUtils;
 import com.example.androiduberriderremake.models.User;
 import com.example.androiduberriderremake.providers.UserProvider;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.regex.Pattern;
 
@@ -114,6 +116,14 @@ public class RegisterUserActivity extends AppCompatActivity {
                                     String userId = userOk.getId();
                                     String email = userOk.getEmail();
                                     Log.d(TAG, "Usuario registrado exitosamente:success");
+                                    //Update token
+                                    FirebaseInstanceId.getInstance()
+                                            .getInstanceId()
+                                            .addOnFailureListener(e -> Toast.makeText(RegisterUserActivity.this,e.getMessage(), Toast.LENGTH_SHORT).show())
+                                            .addOnSuccessListener(instanceIdResult -> {
+                                                Log.d("TOKEN",instanceIdResult.getToken());
+                                                UserUtils.updateToken(RegisterUserActivity.this,instanceIdResult.getToken());
+                                            });
                                     Intent dataUpdateIn = new Intent(RegisterUserActivity.this, DataUpdate.class);
                                     dataUpdateIn.putExtra("userObj", userOk);
                                     startActivity(dataUpdateIn);

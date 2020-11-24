@@ -14,8 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.androiduberriderremake.Common.Common;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -117,13 +120,39 @@ public class DetailRequestActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()){
-                                        Map<String, Object> driver =  new HashMap<>();
-                                        driver.put("status", answer);
-                                        databaseReferenceUsers.child(driverID).child("DriverInformation").updateChildren(driver).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        Map<String, Object> driverInfo =  new HashMap<>();
+                                        driverInfo.put("bank", snapshot.child("DriverInformation").child("bank").getValue().toString());
+                                        driverInfo.put("carColour", snapshot.child("DriverInformation").child("carColour").getValue().toString());
+                                        driverInfo.put("carModel", snapshot.child("DriverInformation").child("carModel").getValue().toString());
+                                        driverInfo.put("countBank", snapshot.child("DriverInformation").child("countBank").getValue().toString());
+                                        driverInfo.put("licensePlate", snapshot.child("DriverInformation").child("licensePlate").getValue().toString());
+                                        driverInfo.put("birthdate", snapshot.child("birthdate").getValue().toString());
+                                        driverInfo.put("email", snapshot.child("email").getValue().toString());
+                                        driverInfo.put("firstName", snapshot.child("firstName").getValue().toString());
+                                        driverInfo.put("identification", snapshot.child("identification").getValue().toString());
+                                        driverInfo.put("lastName", snapshot.child("lastName").getValue().toString());
+                                        driverInfo.put("password", snapshot.child("password").getValue().toString());
+                                        driverInfo.put("phoneNumber", snapshot.child("phoneNumber").getValue().toString());
+                                        driverInfo.put("status", "Libre");
+                                        FirebaseDatabase.getInstance().getReference(Common.DRIVER_INFO_REFERENCE).child(snapshot.child("id").getValue().toString())
+                                        .setValue(driverInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Toast.makeText(DetailRequestActivity.this, "Respuesta guardada exitosamente", Toast.LENGTH_SHORT).show();
-                                                startActivity(new Intent(DetailRequestActivity.this, MenuAdminActivity.class));
+                                                FirebaseDatabase.getInstance()
+                                                .getReference(Common.RIDER_INFO_REFENCE)
+                                                .child(driverID)
+                                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(DetailRequestActivity.this, "Respuesta guardada exitosamente", Toast.LENGTH_SHORT).show();
+                                                        startActivity(new Intent(DetailRequestActivity.this, MenuAdminActivity.class));
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(DetailRequestActivity.this, "Error al eliminar cuenta de viajero", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
@@ -166,7 +195,7 @@ public class DetailRequestActivity extends AppCompatActivity {
                                 placa.setText(snapshot.child("DriverInformation").child("licensePlate").getValue().toString());
                                 color.setText(snapshot.child("DriverInformation").child("carColour").getValue().toString());
                                 modelo.setText(snapshot.child("DriverInformation").child("carModel").getValue().toString());
-                                nombreConductor.setText(snapshot.child("UserInformation").child("firstName").getValue().toString() + " " + snapshot.child("UserInformation").child("lastName").getValue().toString());
+                                nombreConductor.setText(snapshot.child("firstName").getValue().toString() + " " + snapshot.child("lastName").getValue().toString());
                                 downloadImages(driverID);
                             }
                         }

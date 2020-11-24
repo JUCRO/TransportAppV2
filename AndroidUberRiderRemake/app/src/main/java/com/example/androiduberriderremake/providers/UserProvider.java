@@ -9,6 +9,8 @@ import com.example.androiduberriderremake.models.UserRoles;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class UserProvider {
@@ -38,7 +40,13 @@ public class UserProvider {
 
    public boolean registerUserInformation(UserInformation userInf , String userId) {
         try {
-            databaseReference.child(userId).child("UserInformation").setValue(userInf);
+            Map<String, Object> userInformation =  new HashMap<>();
+            userInformation.put("birthdate", userInf.getBirthdate());
+            userInformation.put("firstName", userInf.getFirstName());
+            userInformation.put("lastName", userInf.getLastName());
+            userInformation.put("phoneNumber", userInf.getPhoneNumber());
+            userInformation.put("identification", userInf.getIdentification());
+            databaseReference.child(userId).updateChildren(userInformation);
             return true;
         } catch (Exception error) {
             return false;

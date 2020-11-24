@@ -3,6 +3,7 @@ package com.example.androiduberriderremake;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androiduberriderremake.Common.Common;
+import com.example.androiduberriderremake.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
@@ -94,6 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                             q.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //Update token
+                                    FirebaseInstanceId.getInstance()
+                                            .getInstanceId()
+                                            .addOnFailureListener(e -> Toast.makeText(LoginActivity.this,e.getMessage(), Toast.LENGTH_SHORT).show())
+                                            .addOnSuccessListener(instanceIdResult -> {
+                                                Log.d("TOKEN",instanceIdResult.getToken());
+                                                UserUtils.updateToken(LoginActivity.this,instanceIdResult.getToken());
+                                            });
                                     if (snapshot.exists()){
                                         if(snapshot.hasChild("isAdmin")){
                                             startActivity(new Intent(LoginActivity.this, MenuAdminActivity.class));
